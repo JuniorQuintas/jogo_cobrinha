@@ -12,20 +12,59 @@ let food = {
   y: Math.floor(Math.random() * 15 + 1) * box,
 };
 
+let hh = 0;
+let mm = 0;
+let ss = 0;
+let tempo = 1000;
+let cron;
+
+function start() {
+  let hh = 0;
+  let mm = 0;
+  let ss = 0;
+  cron = setInterval(() => {
+    timer();
+  }, tempo);
+}
+
+function stopc() {
+  clearInterval(cron);
+}
+
+function timer() {
+  ss++;
+  if (ss == 60) {
+    ss = 0;
+    mm++;
+    if (mm == 60) {
+      mm = 0;
+      hh++;
+    }
+  }
+
+  let formato =
+    (hh < 10 ? "0" + hh : hh) +
+    ":" +
+    (mm < 10 ? "0" + mm : mm) +
+    ":" +
+    (ss < 10 ? "0" + ss : ss);
+  document.getElementById("contador").innerText = formato;
+}
+
 function criarBG() {
-  context.fillStyle = "lightgreen";
+  context.fillStyle = "lightblue";
   context.fillRect(0, 0, 16 * box, 16 * box);
 }
 
 function criarSnake() {
   for (i = 0; i < snake.length; i++) {
-    context.fillStyle = "green";
+    context.fillStyle = "blue";
     context.fillRect(snake[i].x, snake[i].y, box, box);
   }
 }
 
 function drawFood() {
-  context.fillStyle = "red";
+  context.fillStyle = "green";
   context.fillRect(food.x, food.y, box, box);
 }
 
@@ -45,9 +84,11 @@ function iniciarJogo() {
   if (snake[0].y < 0 && direcao == "up") snake[0].y = 16 * box;
 
   for (i = 1; i < snake.length; i++) {
+    start();
     if (snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
       clearInterval(jogo);
       alert("Game Over!");
+      stopc();
     }
   }
 
